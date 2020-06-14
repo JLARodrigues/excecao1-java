@@ -13,9 +13,10 @@ public class Programa {
 		
 		Scanner sc = new Scanner(System.in);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		
 		System.out.println("Quarto número: ");
 		int numero = sc.nextInt();
-		System.out.println("Check-in data (dd/MM/yyy)");
+		System.out.print("Check-in data (dd/MM/yyy)");
 		Date checkIn = sdf.parse(sc.next());
 		System.out.println("Check-out data (dd/MM/yyy)");
 		Date checkOut = sdf.parse(sc.next());
@@ -27,26 +28,33 @@ public class Programa {
 			Reservas reservas = new Reservas(numero, checkIn, checkOut);
 			System.out.println("Reservas: " + reservas);
 			
-			System.out.println("Quarto número: ");
-			numero = sc.nextInt();
-			System.out.println("Check-in data (dd/MM/yyy)");
+			System.out.println();
+			System.out.println("Entre com a data para atualização: ");
+			System.out.println("Check-in data (dd/MM/yyyy):");
 			checkIn = sdf.parse(sc.next());
 			System.out.println("Check-out data (dd/MM/yyy)");
 			checkOut = sdf.parse(sc.next());
 			
+			
 			Date agora = new Date();
 			if (checkIn.before(agora) || checkOut.before(agora)) {
-				System.out.println("A data da reserva precisa ser futura.");
+				System.out.println("Erro na reserva: a reserva está sendo feita para datas futuras. ");
 			}
-			else if (!checkOut.after(checkIn)) {
-				System.out.println("As datas da reserva precisam ser futuras");
+			else if (!checkOut.after(checkIn)){
+			    System.out.println("Erro na reserva: Check-out data precisa ser depois do check-in data.");
+			    String erro = reservas.atualData(checkIn, checkOut);
+			    if (erro != null) {
+			    	System.out.println("Erro na reserva: " + erro);
+			    }
+			    else {
+			    	reservas.atualData(checkIn, checkOut);
+			    	System.out.println("Reserva: " + reservas);
+			    }
 			}
-			else {
-			reservas.atualData(checkIn, checkOut);
-			System.out.println("Reservas: " + reservas);
-		}
+			
+			sc.close();
 
 	}
-
+            
 }
 }
