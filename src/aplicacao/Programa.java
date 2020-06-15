@@ -5,15 +5,19 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
+import model.exception.DomainException;
 import modelo.entidades.Reservas;
 
 public class Programa {
 
-	public static void main(String[] args) throws ParseException {
+
+	public static void main(String[] args) {
+		
 		
 		Scanner sc = new Scanner(System.in);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		
+		try {
 		System.out.println("Quarto número: ");
 		int numero = sc.nextInt();
 		System.out.print("Check-in data (dd/MM/yyy)");
@@ -21,40 +25,33 @@ public class Programa {
 		System.out.println("Check-out data (dd/MM/yyy)");
 		Date checkOut = sdf.parse(sc.next());
 		
-		if (!checkOut.after(checkIn)) {
-			System.out.println("Erro a data de saída é anterior à de chegada. ");
+		Reservas reservas = new Reservas(numero, checkIn, checkOut);
+		System.out.println("Reservas: " + reservas);
+		
+		System.out.println();
+		System.out.println("Entre com a data para atualização: ");
+		System.out.println("Check-in data (dd/MM/yyyy):");
+		checkIn = sdf.parse(sc.next());
+		System.out.println("Check-out data (dd/MM/yyy)");
+		checkOut = sdf.parse(sc.next());
+		
+		reservas.atualData(checkIn, checkOut);
+		System.out.println("Reserva: " + reservas);
 		}
-		else {
-			Reservas reservas = new Reservas(numero, checkIn, checkOut);
-			System.out.println("Reservas: " + reservas);
+		catch(ParseException e) {
+			System.out.println("Data com formato inválido.");
+		}
+		catch(DomainException e) {
+			System.out.println("Erro na reserva: " + e.getMessage());
+		}
+		catch(RuntimeException e) {
+			System.out.println("Erro inesperado");
+		}
+		
 			
-			System.out.println();
-			System.out.println("Entre com a data para atualização: ");
-			System.out.println("Check-in data (dd/MM/yyyy):");
-			checkIn = sdf.parse(sc.next());
-			System.out.println("Check-out data (dd/MM/yyy)");
-			checkOut = sdf.parse(sc.next());
-			
-			
-			Date agora = new Date();
-			if (checkIn.before(agora) || checkOut.before(agora)) {
-				System.out.println("Erro na reserva: a reserva está sendo feita para datas futuras. ");
-			}
-			else if (!checkOut.after(checkIn)){
-			    System.out.println("Erro na reserva: Check-out data precisa ser depois do check-in data.");
-			    String erro = reservas.atualData(checkIn, checkOut);
-			    if (erro != null) {
-			    	System.out.println("Erro na reserva: " + erro);
-			    }
-			    else {
-			    	reservas.atualData(checkIn, checkOut);
-			    	System.out.println("Reserva: " + reservas);
-			    }
-			}
-			
-			sc.close();
+		sc.close();
 
-	}
+}
+}
             
-}
-}
+
